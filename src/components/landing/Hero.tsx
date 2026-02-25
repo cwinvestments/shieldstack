@@ -5,17 +5,43 @@ import { useRouter } from "next/navigation";
 
 export default function Hero() {
   const [url, setUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
-  function handleScan(e: React.FormEvent) {
+  async function handleScan(e: React.FormEvent) {
     e.preventDefault();
     if (!url.trim()) return;
-    const encoded = encodeURIComponent(url.trim());
-    router.push(`/scan?url=${encoded}`);
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/scan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: url.trim() }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Scan failed. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      // Store scan results for the results page
+      sessionStorage.setItem(`scan-${data.id}`, JSON.stringify(data));
+      router.push(`/scan/${data.id}`);
+    } catch {
+      setError("Network error. Please check your connection and try again.");
+      setLoading(false);
+    }
   }
 
   return (
-    <section className="relative overflow-hidden px-4 pt-20 pb-24 sm:pt-28 sm:pb-32">
+    <section id="hero" className="relative overflow-hidden px-4 pt-20 pb-24 sm:pt-28 sm:pb-32">
       {/* Background glow */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
@@ -53,15 +79,31 @@ export default function Hero() {
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://your-app.com"
               required
-              className="flex-1 px-5 py-3.5 rounded-lg bg-card border border-border text-foreground placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-base"
+              disabled={loading}
+              className="flex-1 px-5 py-3.5 rounded-lg bg-card border border-border text-foreground placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-base disabled:opacity-50"
             />
             <button
               type="submit"
-              className="px-8 py-3.5 rounded-lg bg-primary text-background font-semibold text-base hover:bg-primary/90 transition-colors whitespace-nowrap"
+              disabled={loading}
+              className="px-8 py-3.5 rounded-lg bg-primary text-background font-semibold text-base hover:bg-primary/90 transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Scan My Site Free &rarr;
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Scanning...
+                </span>
+              ) : (
+                "Scan My Site Free \u2192"
+              )}
             </button>
           </div>
+
+          {error && (
+            <p className="mt-3 text-sm text-severity-critical">{error}</p>
+          )}
         </form>
 
         {/* Trust badges */}
