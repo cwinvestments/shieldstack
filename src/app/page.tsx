@@ -3,6 +3,7 @@ import HowItWorks from "@/components/landing/HowItWorks";
 import WhatWeCheck from "@/components/landing/WhatWeCheck";
 import SampleReport from "@/components/landing/SampleReport";
 import Pricing from "@/components/landing/Pricing";
+import FAQ from "@/components/landing/FAQ";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <WhatWeCheck />
       <SampleReport />
       <Pricing />
+      <FAQ />
     </main>
   );
 }
