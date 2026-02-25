@@ -1,6 +1,7 @@
 import Hero from "@/components/landing/Hero";
 import HowItWorks from "@/components/landing/HowItWorks";
 import WhatWeCheck from "@/components/landing/WhatWeCheck";
+import SampleReport from "@/components/landing/SampleReport";
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
       <Hero />
       <HowItWorks />
       <WhatWeCheck />
+      <SampleReport />
     </main>
   );
 }
