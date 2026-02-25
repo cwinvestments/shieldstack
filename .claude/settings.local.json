@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd:*)",
+      "Bash(cd C:/Projects/memstack && python skills/echo/index-sessions.py 2>&1)",
+      "Bash(cd C:/Projects/memstack && python skills/echo/search.py \"test query\" 2>&1)",
+      "Bash(ls:*)",
+      "Bash(find C:\\\\Projects\\\\adminstack:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(python:*)",
+      "Bash(cp:*)",
+      "Bash(cd C:/Projects/memstack && npm run build 2>&1)",
+      "Bash(powershell:*)",
+      "WebSearch",
+      "WebFetch(domain:lancedb.github.io)",
+      "WebFetch(domain:docs.lancedb.com)",
+      "Bash(grep:*)",
+      "Bash(git:*)",
+      "Bash(cd /c/Projects/ShieldStack && npx create-next-app@14 . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --yes 2>&1)",
+      "Bash(cd /c/Projects/ShieldStack && npm install zustand 2>&1)",
+      "Bash(cd /c/Projects/ShieldStack && npm run build 2>&1)"
+    ]
+  }
+}
