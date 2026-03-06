@@ -16,11 +16,17 @@ export default function Hero() {
     setLoading(true);
     setError("");
 
+    // Normalize: trim and prepend https:// if no protocol
+    let normalizedUrl = url.trim();
+    if (!/^https?:\/\//i.test(normalizedUrl)) {
+      normalizedUrl = `https://${normalizedUrl}`;
+    }
+
     try {
       const res = await fetch("/api/scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: url.trim() }),
+        body: JSON.stringify({ url: normalizedUrl }),
       });
 
       const data = await res.json();
@@ -74,10 +80,10 @@ export default function Hero() {
         <form onSubmit={handleScan} className="mt-10 max-w-xl mx-auto">
           <div className="flex flex-col sm:flex-row gap-3">
             <input
-              type="url"
+              type="text"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://your-app.com"
+              placeholder="your-app.com"
               required
               disabled={loading}
               className="flex-1 px-5 py-3.5 rounded-lg bg-card border border-border text-foreground placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-base disabled:opacity-50"
